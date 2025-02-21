@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::path::Path;
 use zip::write::SimpleFileOptions;
-use zip::ZipWriter;
+use zip::{CompressionMethod, ZipWriter};
 
 fn add_to_zip(
     writer: &mut ZipWriter<File>,
@@ -10,7 +10,7 @@ fn add_to_zip(
 ) -> zip::result::ZipResult<()> {
     if path.is_file() {
         let mut file = File::open(path)?;
-        writer.start_file(file_name, SimpleFileOptions::default())?;
+        writer.start_file(file_name, SimpleFileOptions::default().compression_method(CompressionMethod::Deflated))?;
         std::io::copy(&mut file, writer)?;
     } else if path.is_dir() {
         for entry in std::fs::read_dir(path)? {
