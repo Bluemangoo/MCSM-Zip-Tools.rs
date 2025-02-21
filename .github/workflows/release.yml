@@ -75,13 +75,15 @@ jobs:
             host_os: ubuntu-latest
             use_cross: true
 
-          - target: powerpc64le-unknown-linux-musl
-            filename: file_zip_linux_ppc64
-            host_os: ubuntu-latest
+# failed
+#          - target: powerpc64le-unknown-linux-musl
+#            filename: file_zip_linux_ppc64
+#            host_os: ubuntu-latest
 
-          - target: s390x-unknown-linux-musl
-            filename: file_zip_linux_s390x
-            host_os: ubuntu-latest
+# failed
+#          - target: s390x-unknown-linux-musl
+#            filename: file_zip_linux_s390x
+#            host_os: ubuntu-latest
 
           - target: x86_64-unknown-netbsd
             filename: file_zip_netbsd_x64
@@ -90,15 +92,15 @@ jobs:
 
           - target: i686-unknown-openbsd
             filename: file_zip_openbsd_386
-            host_os: ubuntu-latest
+            host_os: ubuntu-24.04-arm
 
           - target: x86_64-unknown-openbsd
             filename: file_zip_openbsd_x64
-            host_os: ubuntu-latest
+            host_os: ubuntu-24.04-arm
 
           - target: aarch64-unknown-openbsd
             filename: file_zip_openbsd_arm64
-            host_os: ubuntu-latest
+            host_os: ubuntu-24.04-arm
 
           - target: i686-unknown-freebsd
             filename: file_zip_freebsd_386
@@ -112,11 +114,11 @@ jobs:
 
           - target: armv7-unknown-freebsd
             filename: file_zip_freebsd_arm
-            host_os: ubuntu-latest
+            host_os: ubuntu-24.04-arm
 
           - target: aarch64-unknown-freebsd
             filename: file_zip_freebsd_arm64
-            host_os: ubuntu-latest
+            host_os: ubuntu-24.04-arm
 
 #          - target: x86_64-apple-darwin
 #            filename: file_zip_darwin_amd64
@@ -134,7 +136,7 @@ jobs:
 
           - target: aarch64-linux-android
             filename: file_zip_android_arm64
-            host_os: ubuntu-latest
+            host_os: ubuntu-24.04-arm
             use_cross: true
 
     steps:
