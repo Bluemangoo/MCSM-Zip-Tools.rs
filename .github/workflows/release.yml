@@ -60,6 +60,7 @@ jobs:
             filename: file_zip_linux_mips
             host_os: ubuntu-latest
             use_cross: true
+            no_prepare_std: true
 
 ## failed
 #          - target: mips64-openwrt-linux-musl
@@ -167,7 +168,7 @@ jobs:
         if: ${{ !matrix.use_cross }}
         run: rustup target add ${{ matrix.target }}
       - name: Prepare toolchain
-        if: ${{ matrix.use_cross }}
+        if: ${{ matrix.use_cross && !matrix.no_prepare_std }}
         run: |
           rustup component add rust-std --target ${{ matrix.target }}
       - name: Prepare toolchain
