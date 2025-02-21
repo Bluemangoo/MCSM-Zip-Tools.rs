@@ -56,11 +56,10 @@ jobs:
 #            host_os: ubuntu-latest
 #            use_cross: true
 
-## failed
-#          - target: mips-unknown-linux-musl
-#            filename: file_zip_linux_mips
-#            host_os: ubuntu-latest
-#            use_cross: true
+          - target: mips-unknown-linux-musl
+            filename: file_zip_linux_mips
+            host_os: ubuntu-latest
+            use_cross: true
 
 ## failed
 #          - target: mips64-openwrt-linux-musl
@@ -89,10 +88,10 @@ jobs:
 #            host_os: ubuntu-latest
 #            use_cross: true
 
-          - target: x86_64-unknown-netbsd
-            filename: file_zip_netbsd_x64
-            host_os: ubuntu-latest
-            use_cross: true
+#          - target: x86_64-unknown-netbsd
+#            filename: file_zip_netbsd_x64
+#            host_os: ubuntu-latest
+#            use_cross: true
 
 ## failed
 #          - target: i686-unknown-openbsd
