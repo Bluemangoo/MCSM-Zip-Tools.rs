@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    branches: [ "ci" ]
+    branches: [ "master" ]
   workflow_dispatch:
 
 permissions:
@@ -12,142 +12,142 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-#  check:
-#    runs-on: ubuntu-latest
-#    if: ${{ contains(github.event.commits[0].message, '+release') || github.event_name == 'workflow_dispatch'  }}
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-#      - name: Check git tag
-#        run: |
-#          version=$(grep version Cargo.toml -m 1 | cut -d'=' -f2 | tr -d "\r" | tr -d ' ' | tr -d '"' | tr -d "'")
-#          git rev-parse $version || exit 0
-#          exit 1
+  check:
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.event.commits[0].message, '+release') || github.event_name == 'workflow_dispatch'  }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check git tag
+        run: |
+          version=$(grep version Cargo.toml -m 1 | cut -d'=' -f2 | tr -d "\r" | tr -d ' ' | tr -d '"' | tr -d "'")
+          git rev-parse $version || exit 0
+          exit 1
   build:
     runs-on: ${{ matrix.host_os }}
-#    needs: check
-    continue-on-error: true
+    needs: check
+    # continue-on-error: true
     strategy:
       matrix:
         include:
-#          - target: x86_64-pc-windows-msvc
-#            filename: file_zip_win32_x64.exe
-#            host_os: windows-latest
-#
-#          - target: x86_64-unknown-linux-musl
-#            filename: file_zip_linux_x64
-#            host_os: ubuntu-latest
-#            use_cross: false
-#            install: "musl-tools"
-#
-#          - target: aarch64-unknown-linux-musl
-#            filename: file_zip_linux_arm64
-#            host_os: ubuntu-latest
-#            use_cross: true
-#
-#          - target: arm-unknown-linux-musleabihf
-#            filename: file_zip_linux_arm
-#            host_os: ubuntu-latest
-#            use_cross: true
-#
-#          - target: i686-unknown-linux-musl
-#            filename: file_zip_linux_386
-#            host_os: ubuntu-latest
-#            use_cross: true
+          - target: x86_64-pc-windows-msvc
+            filename: file_zip_win32_x64.exe
+            host_os: windows-latest
 
-          - target: mips-unknown-linux-musl
-            filename: file_zip_linux_mips
+          - target: x86_64-unknown-linux-musl
+            filename: file_zip_linux_x64
+            host_os: ubuntu-latest
+            use_cross: false
+            install: "musl-tools"
+
+          - target: aarch64-unknown-linux-musl
+            filename: file_zip_linux_arm64
             host_os: ubuntu-latest
             use_cross: true
-            no_prepare_std: true
 
-## failed
-#          - target: mips64-openwrt-linux-musl
-#            filename: file_zip_linux_mips64(openwrt)
-#            host_os: ubuntu-latest
+          - target: arm-unknown-linux-musleabihf
+            filename: file_zip_linux_arm
+            host_os: ubuntu-latest
+            use_cross: true
 
-## failed
-#          - target: mips64-unknown-linux-muslabi64
-#            filename: file_zip_linux_mips64
-#            host_os: ubuntu-latest
-#            use_cross: true
+          - target: i686-unknown-linux-musl
+            filename: file_zip_linux_386
+            host_os: ubuntu-latest
+            use_cross: true
 
-## failed
-#          - target: mipsel-unknown-linux-musl
-#            filename: file_zip_linux_mipsle
-#            host_os: ubuntu-latest
-#            use_cross: true
+          # # failed
+          # - target: mips-unknown-linux-musl
+          #   filename: file_zip_linux_mips
+          #   host_os: ubuntu-latest
+          #   use_cross: true
 
-#          - target: powerpc64le-unknown-linux-gnu
-#            filename: file_zip_linux_ppc64
-#            host_os: ubuntu-latest
-#            use_cross: true
+          # # failed
+          # - target: mips64-openwrt-linux-musl
+          #   filename: file_zip_linux_mips64(openwrt)
+          #   host_os: ubuntu-latest
 
-#          - target: s390x-unknown-linux-gnu
-#            filename: file_zip_linux_s390x
-#            host_os: ubuntu-latest
-#            use_cross: true
+          # # failed
+          # - target: mips64-unknown-linux-muslabi64
+          #   filename: file_zip_linux_mips64
+          #   host_os: ubuntu-latest
+          #   use_cross: true
 
-#          - target: x86_64-unknown-netbsd
-#            filename: file_zip_netbsd_x64
-#            host_os: ubuntu-latest
-#            use_cross: true
+          # # failed
+          # - target: mipsel-unknown-linux-musl
+          #   filename: file_zip_linux_mipsle
+          #   host_os: ubuntu-latest
+          #   use_cross: true
 
-## failed
-#          - target: i686-unknown-openbsd
-#            filename: file_zip_openbsd_386
-#            host_os: ubuntu-24.04-arm
+          - target: powerpc64le-unknown-linux-gnu
+            filename: file_zip_linux_ppc64
+            host_os: ubuntu-latest
+            use_cross: true
 
-## failed
-#          - target: x86_64-unknown-openbsd
-#            filename: file_zip_openbsd_x64
-#            host_os: ubuntu-latest
+          - target: s390x-unknown-linux-gnu
+            filename: file_zip_linux_s390x
+            host_os: ubuntu-latest
+            use_cross: true
 
-## failed
-#          - target: aarch64-unknown-openbsd
-#            filename: file_zip_openbsd_arm64
-#            host_os: ubuntu-24.04-arm
+          - target: x86_64-unknown-netbsd
+            filename: file_zip_netbsd_x64
+            host_os: ubuntu-latest
+            use_cross: true
 
-#          - target: i686-unknown-freebsd
-#            filename: file_zip_freebsd_386
-#            host_os: ubuntu-latest
-#            use_cross: true
+          # # failed
+          # - target: i686-unknown-openbsd
+          #   filename: file_zip_openbsd_386
+          #   host_os: ubuntu-24.04-arm
 
-#          - target: x86_64-unknown-freebsd
-#            filename: file_zip_freebsd_x64
-#            host_os: ubuntu-latest
-#            use_cross: true
+          # # failed
+          # - target: x86_64-unknown-openbsd
+          #   filename: file_zip_openbsd_x64
+          #   host_os: ubuntu-latest
 
-## failed
-#          - target: armv7-unknown-freebsd
-#            filename: file_zip_freebsd_arm
-#            host_os: ubuntu-24.04-arm
+          # # failed
+          # - target: aarch64-unknown-openbsd
+          #   filename: file_zip_openbsd_arm64
+          #   host_os: ubuntu-24.04-arm
 
-## failed
-#          - target: aarch64-unknown-freebsd
-#            filename: file_zip_freebsd_arm64
-#            host_os: ubuntu-24.04-arm
+          - target: i686-unknown-freebsd
+            filename: file_zip_freebsd_386
+            host_os: ubuntu-latest
+            use_cross: true
 
-#          - target: x86_64-apple-darwin
-#            filename: file_zip_darwin_amd64
-#            host_os: macos-latest
-#            use_cross: false
-#
-#          - target: aarch64-apple-darwin
-#            filename: file_zip_darwin_arm64
-#            host_os: macos-latest
-#
-#          - target: armv7-linux-androideabi
-#            filename: file_zip_android_arm
-#            host_os: ubuntu-latest
-#            use_cross: true
+          - target: x86_64-unknown-freebsd
+            filename: file_zip_freebsd_x64
+            host_os: ubuntu-latest
+            use_cross: true
 
-#          - target: aarch64-linux-android
-#            filename: file_zip_android_arm64
-#            host_os: ubuntu-latest
-#            use_ndk: true
-#            ndk_target: arm64-v8a
+          # # failed
+          # - target: armv7-unknown-freebsd
+          #   filename: file_zip_freebsd_arm
+          #   host_os: ubuntu-24.04-arm
+
+          # # failed
+          # - target: aarch64-unknown-freebsd
+          #   filename: file_zip_freebsd_arm64
+          #   host_os: ubuntu-24.04-arm
+
+          - target: x86_64-apple-darwin
+            filename: file_zip_darwin_amd64
+            host_os: macos-latest
+            use_cross: false
+
+          - target: aarch64-apple-darwin
+            filename: file_zip_darwin_arm64
+            host_os: macos-latest
+
+          - target: armv7-linux-androideabi
+            filename: file_zip_android_arm
+            host_os: ubuntu-latest
+            use_cross: true
+
+          - target: aarch64-linux-android
+            filename: file_zip_android_arm64
+            host_os: ubuntu-latest
+            use_ndk: true
+            ndk_target: arm64-v8a
 
     steps:
       - uses: actions/checkout@v4
@@ -168,7 +168,7 @@ jobs:
         if: ${{ !matrix.use_cross }}
         run: rustup target add ${{ matrix.target }}
       - name: Prepare toolchain
-        if: ${{ matrix.use_cross && !matrix.no_prepare_std }}
+        if: ${{ matrix.use_cross }}
         run: |
           rustup component add rust-std --target ${{ matrix.target }}
       - name: Prepare toolchain
@@ -201,32 +201,32 @@ jobs:
         with:
           name: ${{ matrix.filename }}
           path: target/${{ matrix.target }}/release/${{ matrix.filename }}
-#  release:
-#    needs: build
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-#      - name: Download artifacts
-#        uses: actions/download-artifact@v4
-#        with:
-#          path: artifacts
-#          merge-multiple: true
-#      - name: Generate release info and tag
-#        run: |
-#          version=$(grep version Cargo.toml -m 1 | cut -d'=' -f2 | tr -d "\r" | tr -d ' ' | tr -d '"' | tr -d "'")
-#          echo "version=$version">>$GITHUB_ENV
-#          release_info=release.md
-#          echo "release_info=$release_info">>$GITHUB_ENV
-#          echo "## Commits" > $release_info
-#          number=$(git log --oneline $(git rev-parse `git describe --tags --abbrev=0`)..HEAD | wc -l)
-#          echo "$(git log --pretty='- [%h] %s' -$number)" >> $release_info
-#      - name: Create Release
-#        uses: ncipollo/release-action@v1.12.0
-#        with:
-#          artifacts: artifacts/*
-#          bodyFile: ${{ env.release_info }}
-#          tag: ${{ env.version }}
-#          name: ${{ env.version }}
-#          makeLatest: true
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - name: Generate release info and tag
+        run: |
+          version=$(grep version Cargo.toml -m 1 | cut -d'=' -f2 | tr -d "\r" | tr -d ' ' | tr -d '"' | tr -d "'")
+          echo "version=$version">>$GITHUB_ENV
+          release_info=release.md
+          echo "release_info=$release_info">>$GITHUB_ENV
+          echo "## Commits" > $release_info
+          number=$(git log --oneline $(git rev-parse `git describe --tags --abbrev=0`)..HEAD | wc -l)
+          echo "$(git log --pretty='- [%h] %s' -$number)" >> $release_info
+      - name: Create Release
+        uses: ncipollo/release-action@v1.12.0
+        with:
+          artifacts: artifacts/*
+          bodyFile: ${{ env.release_info }}
+          tag: ${{ env.version }}
+          name: ${{ env.version }}
+          makeLatest: true
