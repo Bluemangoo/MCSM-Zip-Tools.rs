@@ -61,9 +61,10 @@ jobs:
             host_os: ubuntu-latest
             use_cross: true
 
-          - target: mips64-openwrt-linux-musl
-            filename: file_zip_linux_mips64(openwrt)
-            host_os: ubuntu-latest
+## failed
+#          - target: mips64-openwrt-linux-musl
+#            filename: file_zip_linux_mips64(openwrt)
+#            host_os: ubuntu-latest
 
           - target: mips64-unknown-linux-muslabi64
             filename: file_zip_linux_mips64
@@ -75,15 +76,15 @@ jobs:
             host_os: ubuntu-latest
             use_cross: true
 
-# failed
-#          - target: powerpc64le-unknown-linux-musl
+#          - target: powerpc64le-unknown-linux-gnu
 #            filename: file_zip_linux_ppc64
 #            host_os: ubuntu-latest
+#            use_cross: true
 
-# failed
-#          - target: s390x-unknown-linux-musl
+#          - target: s390x-unknown-linux-gnu
 #            filename: file_zip_linux_s390x
 #            host_os: ubuntu-latest
+#            use_cross: true
 
           - target: x86_64-unknown-netbsd
             filename: file_zip_netbsd_x64
@@ -94,31 +95,34 @@ jobs:
             filename: file_zip_openbsd_386
             host_os: ubuntu-24.04-arm
 
-          - target: x86_64-unknown-openbsd
-            filename: file_zip_openbsd_x64
-            host_os: ubuntu-24.04-arm
+## failed
+#          - target: x86_64-unknown-openbsd
+#            filename: file_zip_openbsd_x64
+#            host_os: ubuntu-latest
 
           - target: aarch64-unknown-openbsd
             filename: file_zip_openbsd_arm64
             host_os: ubuntu-24.04-arm
 
-          - target: i686-unknown-freebsd
-            filename: file_zip_freebsd_386
-            host_os: ubuntu-latest
-            install: "libc6-dev-i386"
+#          - target: i686-unknown-freebsd
+#            filename: file_zip_freebsd_386
+#            host_os: ubuntu-latest
+#            use_cross: true
 
 #          - target: x86_64-unknown-freebsd
 #            filename: file_zip_freebsd_x64
 #            host_os: ubuntu-latest
 #            use_cross: true
 
-          - target: armv7-unknown-freebsd
-            filename: file_zip_freebsd_arm
-            host_os: ubuntu-24.04-arm
+## failed
+#          - target: armv7-unknown-freebsd
+#            filename: file_zip_freebsd_arm
+#            host_os: ubuntu-24.04-arm
 
-          - target: aarch64-unknown-freebsd
-            filename: file_zip_freebsd_arm64
-            host_os: ubuntu-24.04-arm
+## failed
+#          - target: aarch64-unknown-freebsd
+#            filename: file_zip_freebsd_arm64
+#            host_os: ubuntu-24.04-arm
 
 #          - target: x86_64-apple-darwin
 #            filename: file_zip_darwin_amd64
@@ -136,8 +140,9 @@ jobs:
 
           - target: aarch64-linux-android
             filename: file_zip_android_arm64
-            host_os: ubuntu-24.04-arm
-            use_cross: true
+            host_os: ubuntu-latest
+            use_ndk: true
+            ndk_target: arm64-v8a
 
     steps:
       - uses: actions/checkout@v4
@@ -161,12 +166,23 @@ jobs:
         if: ${{ matrix.use_cross }}
         run: |
           rustup component add rust-std --target ${{ matrix.target }}
+      - name: Prepare toolchain
+        if: ${{ matrix.use_ndk }}
+        run: |
+          cargo install cargo-ndk
+      - uses: nttld/setup-ndk@v1
+        if: ${{ matrix.use_ndk }}
+        with:
+          ndk-version: 'r28'
       - name: Build
         if: ${{ matrix.use_cross }}
         run: cross build --release --target ${{ matrix.target }}
       - name: Build
-        if: ${{ !matrix.use_cross }}
+        if: ${{ !matrix.use_cross && !matrix.use_ndk }}
         run: cargo build --release --target ${{ matrix.target }}
+      - name: Build
+        if: ${{  matrix.use_ndk }}
+        run: cargo ndk -t ${{ matrix.ndk_target }} build --release
       - name: Pre-upload
         if: ${{ !contains(matrix.target, 'windows') }}
         run: |
