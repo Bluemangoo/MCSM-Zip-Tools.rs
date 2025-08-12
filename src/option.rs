@@ -36,4 +36,6 @@ pub struct Opt {
     pub file: Vec<String>,
     #[structopt(short = "mode", long, about = "1=zip, 2=unzip")]
     pub mode: Mode,
+    #[structopt(short = "code", long, about = "unused")]
+    pub code: Option<String>,
 }

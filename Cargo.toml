@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.96"
 structopt = "0.3.26"
-zip = {version =  "2.2.2", default-features = false, features = ["time", "deflate"] }
+zip = {version =  "4.3.0", default-features = false, features = ["time", "deflate"] }
 
 [profile.release]
 strip = true
