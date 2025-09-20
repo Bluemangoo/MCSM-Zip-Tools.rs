@@ -19,7 +19,7 @@ fn main() {
             }
         }
         Mode::Unzip => {
-            if let Err(e)=zip::do_unzip(&args.zip_path, &args.dist_dir_path.unwrap()){
+            if let Err(e)=zip::do_unzip(&args.zip_path, &args.dist_dir_path.unwrap(), args.code.as_ref()){
                 eprintln!("Error: {}", e);
                 std::process::exit(-3);
             }

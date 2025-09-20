@@ -1,11 +1,12 @@
 [package]
 name = "mcsm-zip"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 
 [dependencies]
 anyhow = "1.0.96"
 structopt = "0.3.26"
+zifu_core = "0.1.1"
 zip = {version =  "4.3.0", default-features = false, features = ["time", "deflate"] }
 
 [profile.release]
